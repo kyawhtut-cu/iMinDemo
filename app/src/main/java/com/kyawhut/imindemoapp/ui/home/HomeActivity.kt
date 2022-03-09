@@ -31,7 +31,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         homeBinding.executePendingBindings()
 
         printer.setOnSuccessListener {
-            setLog(if (it.isNotEmpty()) it else "Print Success.")
+            setLog(it.ifEmpty { "Print Success." })
         }
 
         printer.setOnFailListener {
@@ -48,6 +48,10 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(v: View) {
         when (v.id) {
+            R.id.btnInitPrinter -> {
+                setLog("Printer initialize.")
+                printer.init()
+            }
             R.id.btnPrinterStatus -> {
                 setLog("Printer Status => ${printer.status}")
             }
@@ -68,10 +72,5 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
                 printer.printAndFeedPaper(100)
             }
         }
-    }
-
-    override fun onResume() {
-        printer.onResume()
-        super.onResume()
     }
 }

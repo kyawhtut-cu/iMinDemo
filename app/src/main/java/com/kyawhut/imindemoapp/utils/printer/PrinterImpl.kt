@@ -23,12 +23,15 @@ class PrinterImpl constructor(private val context: Context) : Printer {
 
     private var onSuccess: ((String) -> Unit)? = null
     private var onFail: ((Exception) -> Unit)? = null
+    private val printConnectionType: IminPrintUtils.PrintConnectType
+        get() = if (iMinPrintUtils.isSPIPrint) IminPrintUtils.PrintConnectType.SPI
+        else IminPrintUtils.PrintConnectType.USB
 
     override val isConnected: Boolean
-        get() = iMinPrintUtils.getPrinterStatus(IminPrintUtils.PrintConnectType.USB) == 0
+        get() = status == 0
 
     override val status: Int
-        get() = iMinPrintUtils.getPrinterStatus(IminPrintUtils.PrintConnectType.USB)
+        get() = iMinPrintUtils.getPrinterStatus(printConnectionType)
 
     private var isAlreadyConnected: Boolean = false
 
@@ -38,14 +41,14 @@ class PrinterImpl constructor(private val context: Context) : Printer {
             return
         }
         if (isAlreadyConnected) {
-            onSuccess?.invoke("Printer already connected.")
+            onSuccess?.invoke("Printer already connected.\nPrinter connection Type => $printConnectionType")
             return
         }
-        iMinPrintUtils.resetDevice()
-        iMinPrintUtils.initPrinter(IminPrintUtils.PrintConnectType.USB)
+        if (!iMinPrintUtils.isSPIPrint) iMinPrintUtils.resetDevice()
+        iMinPrintUtils.initPrinter(printConnectionType)
         if (status == 0) {
             isAlreadyConnected = true
-            onSuccess?.invoke("Printer initialize success.")
+            onSuccess?.invoke("Printer initialize success.\nPrinter connection Type => $printConnectionType")
         } else {
             onFail?.invoke(Exception("Printer error. Error code => $status"))
         }

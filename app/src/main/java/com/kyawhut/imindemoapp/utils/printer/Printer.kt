@@ -30,7 +30,8 @@ interface Printer {
             "M2-Max",
             "D1",
             "S1-701",
-            "S1-702"
+            "S1-702",
+            "M2-202"
         )
         val isPrinterSupport: Boolean
             get() = SUPPORTED_GROUP_ONE.contains(SystemPropManager.getModel())

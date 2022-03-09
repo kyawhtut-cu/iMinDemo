@@ -59,7 +59,7 @@
             android:layout_height="0dp"
             android:adjustViewBounds="true"
             android:src="@drawable/dd_black_white_print_logo"
-            app:layout_constraintBottom_toTopOf="@+id/btnPrintImage"
+            app:layout_constraintBottom_toTopOf="@+id/btnInitPrinter"
             app:layout_constraintEnd_toEndOf="@+id/btnPrintText"
             app:layout_constraintStart_toStartOf="@+id/etPrint"
             app:layout_constraintTop_toBottomOf="@+id/btnPrintText" />
@@ -83,11 +83,23 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:onClick="@{(v) -> onClickListener.onClick(v)}"
-            android:text="Print Status"
+            android:text="Status"
             app:icon="@drawable/ic_printer"
             app:layout_constraintBottom_toTopOf="@+id/centerGuideLine"
             app:layout_constraintEnd_toEndOf="@+id/btnPrintText"
             app:layout_constraintStart_toEndOf="@+id/btnPrintImage"
+            tools:ignore="HardcodedText" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnInitPrinter"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:onClick="@{(v) -> onClickListener.onClick(v)}"
+            android:text="Init Printer"
+            app:icon="@drawable/ic_printer"
+            app:layout_constraintBottom_toTopOf="@+id/btnPrinterStatus"
+            app:layout_constraintEnd_toEndOf="@+id/btnPrintText"
+            app:layout_constraintStart_toStartOf="@+id/btnPrintImage"
             tools:ignore="HardcodedText" />
 
         <androidx.constraintlayout.widget.Guideline
