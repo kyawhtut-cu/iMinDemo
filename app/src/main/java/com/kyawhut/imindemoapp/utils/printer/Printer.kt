@@ -37,9 +37,7 @@ interface Printer {
             get() = SUPPORTED_GROUP_ONE.contains(SystemPropManager.getModel())
     }
 
-    val isConnected: Boolean
-
-    val status: Int
+    fun getStatus(callback: (Int) -> Unit)
 
     fun init()
 

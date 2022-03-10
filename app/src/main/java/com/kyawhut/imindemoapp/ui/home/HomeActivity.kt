@@ -53,7 +53,9 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
                 printer.init()
             }
             R.id.btnPrinterStatus -> {
-                setLog("Printer Status => ${printer.status}")
+                printer.getStatus {
+                    setLog("Printer Status => $it")
+                }
             }
             R.id.btnPrintText -> {
                 setLog("Printing text {${homeBinding.edtPrint.text.toString()}}")
