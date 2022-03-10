@@ -6,11 +6,9 @@ import android.view.View
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.core.widget.NestedScrollView
-import com.imin.printerlib.Callback
 import com.imin.printerlib.IminPrintUtils
 import com.kyawhut.imindemoapp.utils.printer.PrintUtils.toBitmap
 import com.kyawhut.imindemoapp.utils.printer.PrintUtils.toBlackAndWhite
-import timber.log.Timber
 
 /**
  * @author kyawhtut
@@ -159,11 +157,6 @@ class PrinterImpl constructor(private val context: Context) : Printer {
         try {
             callback.invoke()
             onSuccess?.invoke(message)
-            iMinPrintUtils.getPrinterStatus(IminPrintUtils.PrintConnectType.SPI, object : Callback {
-                override fun callback(p0: Int) {
-                    Timber.d("IMinPrinter Status => %s", p0)
-                }
-            })
         } catch (e: Exception) {
             e.printStackTrace()
             onFail?.invoke(e)
