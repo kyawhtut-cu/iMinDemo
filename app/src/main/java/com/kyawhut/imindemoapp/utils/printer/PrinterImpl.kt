@@ -27,13 +27,19 @@ class PrinterImpl constructor(private val context: Context) : Printer {
         get() = if (iMinPrintUtils.isSPIPrint) IminPrintUtils.PrintConnectType.SPI
         else IminPrintUtils.PrintConnectType.USB
 
-    override val isConnected: Boolean
-        get() = status == 0
-
-    override val status: Int
-        get() = iMinPrintUtils.getPrinterStatus(printConnectionType)
-
     private var isAlreadyConnected: Boolean = false
+
+    override fun getStatus(callback: (Int) -> Unit) {
+        if (!isAlreadyConnected) {
+            callback(-1)
+            return
+        }
+        if (iMinPrintUtils.isSPIPrint) {
+            iMinPrintUtils.getPrinterStatus(printConnectionType) {
+                callback(it)
+            }
+        } else callback(iMinPrintUtils.getPrinterStatus(printConnectionType))
+    }
 
     override fun init() {
         if (!Printer.isPrinterSupport) {
@@ -46,12 +52,16 @@ class PrinterImpl constructor(private val context: Context) : Printer {
         }
         if (!iMinPrintUtils.isSPIPrint) iMinPrintUtils.resetDevice()
         iMinPrintUtils.initPrinter(printConnectionType)
-        if (status == 0) {
-            isAlreadyConnected = true
-            onSuccess?.invoke("Printer initialize success.\nPrinter connection Type => $printConnectionType")
-        } else {
-            onFail?.invoke(Exception("Printer error. Error code => $status"))
+
+        getStatus {
+            if (it == 0) {
+                isAlreadyConnected = true
+                onSuccess?.invoke("Printer initialize success.\nPrinter connection Type => $printConnectionType")
+            } else {
+                onFail?.invoke(Exception("Printer error. Error code => $it"))
+            }
         }
+
     }
 
     override fun printAndLineFeed() {
@@ -145,6 +155,11 @@ class PrinterImpl constructor(private val context: Context) : Printer {
         try {
             callback.invoke()
             onSuccess?.invoke(message)
+            /*iMinPrintUtils.getPrinterStatus(IminPrintUtils.PrintConnectType.SPI, object : Callback {
+                override fun callback(p0: Int) {
+                    Timber.d("IMinPrinter Status => %s", p0)
+                }
+            })*/
         } catch (e: Exception) {
             e.printStackTrace()
             onFail?.invoke(e)
