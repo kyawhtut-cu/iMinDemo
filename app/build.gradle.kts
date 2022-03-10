@@ -106,6 +106,10 @@ dependencies {
     //Timber(Logging)
     implementation(Libs.timber)
 
+    //rx
+    implementation(Libs.rxJava)
+    implementation(Libs.rxAndroid)
+
     //iMin SDK
     implementation(fileTree("libs/imin/IminLibs1.0.15.jar"))
     implementation(fileTree("libs/imin/iminPrinterSDK.jar"))

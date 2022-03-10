@@ -53,6 +53,8 @@ class PrinterImpl constructor(private val context: Context) : Printer {
         if (!iMinPrintUtils.isSPIPrint) iMinPrintUtils.resetDevice()
         iMinPrintUtils.initPrinter(printConnectionType)
 
+        isAlreadyConnected = iMinPrintUtils.isSPIPrint
+
         getStatus {
             if (it == 0) {
                 isAlreadyConnected = true
@@ -155,11 +157,6 @@ class PrinterImpl constructor(private val context: Context) : Printer {
         try {
             callback.invoke()
             onSuccess?.invoke(message)
-            /*iMinPrintUtils.getPrinterStatus(IminPrintUtils.PrintConnectType.SPI, object : Callback {
-                override fun callback(p0: Int) {
-                    Timber.d("IMinPrinter Status => %s", p0)
-                }
-            })*/
         } catch (e: Exception) {
             e.printStackTrace()
             onFail?.invoke(e)
